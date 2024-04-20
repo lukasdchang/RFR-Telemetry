@@ -48,6 +48,29 @@ def calc_distance(data):
 
     print(f"Total distance driven: {total_distance_miles:.2f} miles")
 
+def max_min_data(data, data_details):
+    while True:
+        print("\nAvailable Data Types for Max & Min Analysis:")
+        for index, detail in enumerate(data_details, start=1):
+            print(f"{index}. {detail['name']} ({detail['unit']})")
+        print("Enter 'exit' to quit to main menu.")
+
+        user_input = input("Enter a number or 'exit': ")
+        if user_input.lower() == 'exit':
+            break
+
+        selected_index = int(user_input) - 1
+        selected_data = data_details[selected_index]
+
+        print(f"You have selected: {selected_data['name']}")
+
+        # Calculate and display max and min
+        max_value = data[selected_data['column'] - 1].max()
+        min_value = data[selected_data['column'] - 1].min()
+
+        print(f"Maximum {selected_data['name']} ({selected_data['unit']}): {max_value}")
+        print(f"Minimum {selected_data['name']} ({selected_data['unit']}): {min_value}")
+
 def main():
     directory = '.'  # Current directory
     csv_files = list_csv_files(directory)
@@ -86,7 +109,7 @@ def main():
     while True:
         print(f"\nWhat will you do today?")
         print(f"1. Print Graphs")
-        print(f"2. Calculate Distance")
+        print(f"2. Calculate Distance Driven")
         print(f"3. Max & Min of data")
         print(f"Enter 'exit' to exit the program.")
         command = input(f"Enter a number or 'exit': ")
@@ -105,7 +128,7 @@ def main():
         elif command == 2:
             calc_distance(data)
         elif command == 3:
-            # Add functionality for max & min analysis
+            max_min_data(data, data_details)
             pass
 
 if __name__ == '__main__':
