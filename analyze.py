@@ -154,7 +154,7 @@ def plot_temperature_data(data):
     plt.figure(figsize=(12, 6))
     plt.plot(time, engine_oil_temp, label='Engine Oil Temp (°C)', linestyle='-', color='red')
     plt.plot(time, gbox_oil_temp, label='Gearbox Oil Temp (°C)', linestyle='-', color='blue')
-    plt.plot(time, coolant_temp, label='Coolant Temp (°C)', linestyle='-.', color='green')
+    plt.plot(time, coolant_temp, label='Coolant Temp (°C)', linestyle='-', color='green')
 
     # Adding titles and labels
     plt.title('Engine Oil, Gearbox Oil, and Coolant Temperatures Over Time')
@@ -167,6 +167,33 @@ def plot_temperature_data(data):
 
     # Display the plot
     plt.show()
+
+def plot_temperature_data_plotly(data):
+    # Extract the time series and temperature data
+    time = data[0]  # Assuming the first column is the time
+    engine_oil_temp = data[7]  # Column 7 for Engine Oil Temp
+    gbox_oil_temp = data[8]  # Column 8 for Gearbox Oil Temp
+    coolant_temp = data[6]  # Column 6 for Coolant Temp
+
+    # Create a Plotly figure
+    fig = go.Figure()
+
+    # Add traces for each temperature type
+    fig.add_trace(go.Scatter(x=time, y=engine_oil_temp, mode='lines+markers', name='Engine Oil Temp (°C)', 
+                             line=dict(color='red', width=2, dash='solid')))
+    fig.add_trace(go.Scatter(x=time, y=gbox_oil_temp, mode='lines+markers', name='Gearbox Oil Temp (°C)',
+                             line=dict(color='blue', width=2, dash='solid')))
+    fig.add_trace(go.Scatter(x=time, y=coolant_temp, mode='lines+markers', name='Coolant Temp (°C)',
+                             line=dict(color='green', width=2, dash='solid')))
+
+    # Update the layout to add titles and labels
+    fig.update_layout(title='Engine Oil, Gearbox Oil, and Coolant Temperatures Over Time',
+                      xaxis_title='Time (s)',
+                      yaxis_title='Temperature (°C)',
+                      legend_title='Temperature Types')
+
+    # Show the plot
+    fig.show()
 
 def main():
     data = load_csv_file()
@@ -201,6 +228,7 @@ def main():
         print(f"4. Max & Min of data")
         print(f"5. Load a new CSV file")
         print(f"6. Plot temperature data")
+        print(f"7. Plot temperature data(plotly)")
         print(f"Enter 'exit' to exit the program.")
         command = input(f"Enter a number or 'exit': ")
 
@@ -232,6 +260,8 @@ def main():
         elif command == 6:
             plot_temperature_data(data)
             pass
+        elif command == 7:
+            plot_temperature_data_plotly(data)
 
 if __name__ == '__main__':
     main()
