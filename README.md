@@ -3,8 +3,10 @@ Drive Day Analyzer is a program that allows the user to interactively analyze CS
     - Easily insert new data to be analyzed by putting the CSV file in the same directory as this assuming it is formatted all the same
     - Select a file to be analyzed
     - Select a command: 
-        - Print graphs
-            - Allows you to print the graph of many different types of data
+        - Plot on matplotlib
+            - Allows you to print the graph of many different types of data and compare using matplotlib
+        - Plot on plotly
+            - Allows you to print the graph of many different types of data using matplotlib
         - Calculate Distance Driven
             - Calulated by finding the integral of front left wheel speed by time
         - Max & Min of data

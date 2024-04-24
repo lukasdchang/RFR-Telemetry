@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
 def list_csv_files(directory):
     # List all files in the given directory
@@ -23,7 +24,65 @@ def load_csv_file():
     filename = csv_files[file_index]
     return pd.read_csv(filename, skiprows=18, header=None)
 
-def plot_data(data, data_details):
+def plot_matplotlib(data, data_details):
+    while True:
+        print("\nAvailable Data Types:")
+        for index, detail in enumerate(data_details, start=1):
+            print(f"{index}. {detail['name']} ({detail['unit']})")
+        print("Enter 'exit' to quit to main menu.")
+        print("Enter 'compare' to compare two graphs.")
+
+        user_input = input("Enter a number, 'compare', or 'exit': ")
+        if user_input.lower() == 'exit':
+            break
+        elif user_input.lower() == 'compare':
+            print("Select the first data type for comparison:")
+            first_index = int(input("Enter a number: ")) - 1
+            first_data = data_details[first_index]
+
+            print("Select the second data type for comparison:")
+            second_index = int(input("Enter a number: ")) - 1
+            second_data = data_details[second_index]
+
+            # Plotting the data for comparison
+            plt.figure(figsize=(15, 5))
+
+            # First data plot
+            plt.subplot(1, 2, 1)  # 1 row, 2 columns, first subplot
+            plt.plot(data[0], data[first_data['column'] - 1], label=f"{first_data['name']} ({first_data['unit']})")
+            plt.title(f"{first_data['name']} Over Time")
+            plt.xlabel('Time (s)')
+            plt.ylabel(f"{first_data['name']} ({first_data['unit']})")
+            plt.legend()
+            plt.grid(True)
+
+            # Second data plot
+            plt.subplot(1, 2, 2)  # 1 row, 2 columns, second subplot
+            plt.plot(data[0], data[second_data['column'] - 1], label=f"{second_data['name']} ({second_data['unit']})")
+            plt.title(f"{second_data['name']} Over Time")
+            plt.xlabel('Time (s)')
+            plt.ylabel(f"{second_data['name']} ({second_data['unit']})")
+            plt.legend()
+            plt.grid(True)
+
+            plt.show()
+        else:
+            selected_index = int(user_input) - 1
+            selected_data = data_details[selected_index]
+
+            print(f"You have selected: {selected_data['name']}")
+
+            # Plotting the single data
+            plt.figure(figsize=(10, 5))
+            plt.plot(data[0], data[selected_data['column'] - 1], label=f"{selected_data['name']} ({selected_data['unit']})")
+            plt.title(f"{selected_data['name']} Over Time")
+            plt.xlabel('Time (s)')
+            plt.ylabel(f"{selected_data['name']} ({selected_data['unit']})")
+            plt.legend()
+            plt.grid(True)
+            plt.show()
+
+def plot_plotly(data, data_details):
     while True:
         print("\nAvailable Data Types:")
         for index, detail in enumerate(data_details, start=1):
@@ -39,15 +98,14 @@ def plot_data(data, data_details):
 
         print(f"You have selected: {selected_data['name']}")
 
-        # Plotting the data
-        plt.figure(figsize=(10, 5))
-        plt.plot(data[0], data[selected_data['column'] - 1], label=f"{selected_data['name']} ({selected_data['unit']})")
-        plt.title(f"{selected_data['name']} Over Time")
-        plt.xlabel('Time (s)')
-        plt.ylabel(f"{selected_data['name']} ({selected_data['unit']})")
-        plt.legend()
-        plt.grid(True)
-        plt.show()
+        # Plotting the data using Plotly
+        fig = go.Figure(data=go.Scatter(x=data[0], y=data[selected_data['column'] - 1],
+                                        mode='lines+markers', name=selected_data['name']))
+        fig.update_layout(title=f"{selected_data['name']} Over Time",
+                          xaxis_title='Time (s)',
+                          yaxis_title=f"{selected_data['name']} ({selected_data['unit']})")
+        fig.show()
+
 
 def calc_distance(data):
     # Assuming time is column 0 and wheel speed in km/h is column 14
@@ -112,10 +170,11 @@ def main():
 
     while True:
         print(f"\nWhat will you do today?")
-        print(f"1. Print Graphs")
-        print(f"2. Calculate Distance Driven")
-        print(f"3. Max & Min of data")
-        print(f"4. Load a new CSV file")
+        print(f"1. Plot using matplotlib")
+        print(f"2. Plot using plotly")
+        print(f"3. Calculate Distance Driven")
+        print(f"4. Max & Min of data")
+        print(f"5. Load a new CSV file")
         print(f"Enter 'exit' to exit the program.")
         command = input(f"Enter a number or 'exit': ")
 
@@ -129,14 +188,17 @@ def main():
             continue
 
         if command == 1:
-            plot_data(data, data_details)
+            plot_matplotlib(data, data_details)
         elif command == 2:
+            plot_plotly(data, data_details)
+            pass    
+        elif command == 3:
             calc_distance(data)
             pass
-        elif command == 3:
+        elif command == 4:
             max_min_data(data, data_details)
             pass
-        elif command == 4:
+        elif command == 5:
             data = load_csv_file()
             if data is None:
                 print("Failed to load a new file, exiting.")
