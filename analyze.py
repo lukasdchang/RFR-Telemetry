@@ -217,7 +217,10 @@ def main():
         {"name": "Wheel Speed FL", "column": 15, "unit": "km/h"},
         {"name": "Wheel Speed FR", "column": 16, "unit": "km/h"},
         {"name": "Wheel Speed RL", "column": 17, "unit": "km/h"},
-        {"name": "Wheel Speed RR", "column": 18, "unit": "km/h"}
+        {"name": "Wheel Speed RR", "column": 18, "unit": "km/h"},
+        {"name": "G Force Lat", "column": 19, "unit": "G"},
+        {"name": "G Force Long", "column": 20, "unit": "G"},
+        {"name": "G Force Vert", "column": 21, "unit": "G"}
     ]
 
     while True:
