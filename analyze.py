@@ -8,6 +8,21 @@ def list_csv_files(directory):
     # Filter and return only CSV files
     return [file for file in files if file.endswith('.csv')]
 
+def load_csv_file():
+    directory = '.'  # Current directory
+    csv_files = list_csv_files(directory)
+    if not csv_files:
+        print("No CSV files found in the directory.")
+        return None
+
+    print("CSV Files available:")
+    for index, file in enumerate(csv_files, start=1):
+        print(f"{index}. {file}")
+
+    file_index = int(input("Select a file by number: ")) - 1
+    filename = csv_files[file_index]
+    return pd.read_csv(filename, skiprows=18, header=None)
+
 def plot_data(data, data_details):
     while True:
         print("\nAvailable Data Types:")
@@ -37,14 +52,13 @@ def plot_data(data, data_details):
 def calc_distance(data):
     # Assuming time is column 0 and wheel speed in km/h is column 14
     time = data[0]
-    speed_km_per_hr = data[14]
+    speed_miles_per_hr = data[14]
 
-    speed_m_per_s = speed_km_per_hr / 3.6
+    speed_m_per_s = speed_miles_per_hr / 2.237
     time_intervals = time.diff().fillna(0)
     distances = speed_m_per_s * time_intervals
     total_distance_m = distances.sum()
-    total_distance_km = total_distance_m / 1000
-    total_distance_miles = total_distance_km * 0.621371
+    total_distance_miles = total_distance_m / 1609
 
     print(f"Total distance driven: {total_distance_miles:.2f} miles")
 
@@ -72,19 +86,9 @@ def max_min_data(data, data_details):
         print(f"Minimum {selected_data['name']} ({selected_data['unit']}): {min_value}")
 
 def main():
-    directory = '.'  # Current directory
-    csv_files = list_csv_files(directory)
-    if not csv_files:
-        print("No CSV files found in the directory.")
+    data = load_csv_file()
+    if data is None:
         return
-
-    print("CSV Files available:")
-    for index, file in enumerate(csv_files, start=1):
-        print(f"{index}. {file}")
-
-    file_index = int(input("Select a file by number: ")) - 1
-    filename = csv_files[file_index]
-    data = pd.read_csv(filename, skiprows=18, header=None)
 
     data_details = [
         {"name": "Battery Current", "column": 2, "unit": "A"},
@@ -111,6 +115,7 @@ def main():
         print(f"1. Print Graphs")
         print(f"2. Calculate Distance Driven")
         print(f"3. Max & Min of data")
+        print(f"4. Load a new CSV file")
         print(f"Enter 'exit' to exit the program.")
         command = input(f"Enter a number or 'exit': ")
 
@@ -127,9 +132,15 @@ def main():
             plot_data(data, data_details)
         elif command == 2:
             calc_distance(data)
+            pass
         elif command == 3:
             max_min_data(data, data_details)
             pass
+        elif command == 4:
+            data = load_csv_file()
+            if data is None:
+                print("Failed to load a new file, exiting.")
+                break
 
 if __name__ == '__main__':
     main()
