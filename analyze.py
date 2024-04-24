@@ -143,6 +143,31 @@ def max_min_data(data, data_details):
         print(f"Maximum {selected_data['name']} ({selected_data['unit']}): {max_value}")
         print(f"Minimum {selected_data['name']} ({selected_data['unit']}): {min_value}")
 
+def plot_temperature_data(data):
+    # Extract the time series and temperature data
+    time = data[0]  # Assuming the first column is the time
+    engine_oil_temp = data[7]  # Column 7 for Engine Oil Temp
+    gbox_oil_temp = data[8]  # Column 8 for Gearbox Oil Temp
+    coolant_temp = data[6]  # Column 6 for Coolant Temp
+
+    # Create a plot
+    plt.figure(figsize=(12, 6))
+    plt.plot(time, engine_oil_temp, label='Engine Oil Temp (°C)', linestyle='-', color='red')
+    plt.plot(time, gbox_oil_temp, label='Gearbox Oil Temp (°C)', linestyle='-', color='blue')
+    plt.plot(time, coolant_temp, label='Coolant Temp (°C)', linestyle='-.', color='green')
+
+    # Adding titles and labels
+    plt.title('Engine Oil, Gearbox Oil, and Coolant Temperatures Over Time')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Temperature (°C)')
+    plt.legend()
+
+    # Show grid
+    plt.grid(True)
+
+    # Display the plot
+    plt.show()
+
 def main():
     data = load_csv_file()
     if data is None:
@@ -175,6 +200,7 @@ def main():
         print(f"3. Calculate Distance Driven")
         print(f"4. Max & Min of data")
         print(f"5. Load a new CSV file")
+        print(f"6. Plot temperature data")
         print(f"Enter 'exit' to exit the program.")
         command = input(f"Enter a number or 'exit': ")
 
@@ -203,6 +229,9 @@ def main():
             if data is None:
                 print("Failed to load a new file, exiting.")
                 break
+        elif command == 6:
+            plot_temperature_data(data)
+            pass
 
 if __name__ == '__main__':
     main()
