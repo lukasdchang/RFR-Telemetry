@@ -17,3 +17,6 @@ Drive Day Analyzer is a program that allows the user to interactively analyze CS
 How to run:
     1. Open new terminal
     2. python3 analyze.py
+
+How to make python executable:
+    pyinstaller --onefile analyze.py
